@@ -19,6 +19,8 @@ class AppColor {
   static final Color footer = Color(0xFFF8FAFC);
   static final Color outline = Color(0xFFF1F5F9);
   static final Color background = Color(0xFFF6F6F8);
+  static final Color lightGrey = Color(0xFFE0E0E0);
+  static final Color grey = Color(0xFF9E9E9E);
 
 
 

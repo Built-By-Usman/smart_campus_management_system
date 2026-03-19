@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:smar_campus_management_system/core/constant/app_routes.dart';
-import 'package:smar_campus_management_system/core/function/utilities.dart';
+import 'package:CampusX/core/constant/app_routes.dart';
+import 'package:CampusX/core/function/utilities.dart';
 
 class ApiClient {
   final dio = Dio();
@@ -11,6 +11,7 @@ class ApiClient {
 
   ApiClient() {
     dio.options.baseUrl = 'http://153.92.208.33/smart-campus';
+    // dio.options.baseUrl = 'http://localhost:8000/smart-campus';
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

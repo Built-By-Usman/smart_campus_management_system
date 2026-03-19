@@ -1,6 +1,6 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:smar_campus_management_system/core/constant/app_color.dart';
+import 'package:CampusX/core/constant/app_color.dart';
 
 void showSnackBar(String error, String message) {
   Get.snackbar(
@@ -18,5 +18,5 @@ void showToast(String message) {
       backgroundColor: AppColor.white,
       gravity: ToastGravity.BOTTOM,
       textColor: AppColor.black,
-      toastLength: Toast.LENGTH_SHORT);
+      toastLength: Toast.LENGTH_LONG);
 }
