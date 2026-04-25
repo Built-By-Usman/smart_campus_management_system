@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 import 'package:CampusX/core/constant/app_color.dart';
-
-import '../controller/verify_otp_screen_controller.dart';
+import 'package:CampusX/core/constant/app_routes.dart';
+import '../provider/verify_otp_provider.dart';
 
 class VerifyOtpScreen extends StatelessWidget {
   final String email;
 
-  VerifyOtpScreen({super.key, required this.email});
-
-  late final VerifyOtpScreenController controller = Get.put(VerifyOtpScreenController(email: email));
+  const VerifyOtpScreen({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => VerifyOtpProvider(email: email)..startTimer(),
+      child: const _VerifyOtpView(),
+    );
+  }
+}
+
+class _VerifyOtpView extends StatelessWidget {
+  const _VerifyOtpView();
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<VerifyOtpProvider>();
+
     return Scaffold(
       backgroundColor: AppColor.background,
       body: SafeArea(
@@ -25,32 +37,31 @@ class VerifyOtpScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(25),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+
+                    /// 🔙 Back
                     Align(
                       alignment: Alignment.centerLeft,
                       child: InkWell(
-                        onTap: (){
-                         controller.goBack();
-                        },
-                        child: Icon(Icons.arrow_back,color: AppColor.subHeading,),
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(Icons.arrow_back, color: AppColor.subHeading),
                       ),
                     ),
+
+                    /// 📧 Icon
                     Container(
                       decoration: BoxDecoration(
                         color: AppColor.lightBlue,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.mark_email_read_outlined,
-                          color: AppColor.blue,
-                        ),
-                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(Icons.mark_email_read_outlined, color: AppColor.blue),
                     ),
-                    SizedBox(height: 15,),
+
+                    const SizedBox(height: 15),
+
+                    /// Title
                     Text(
                       'Verify your email',
                       style: TextStyle(
@@ -60,7 +71,9 @@ class VerifyOtpScreen extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
+
+                    /// Email text
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
@@ -72,65 +85,72 @@ class VerifyOtpScreen extends StatelessWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: email,
+                            text: provider.email,
                             style: TextStyle(
                               color: AppColor.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
+                    /// 🔢 OTP Input
                     Pinput(
                       length: 6,
                       keyboardType: TextInputType.number,
-                      onCompleted: (pin) {
-                        print(pin);
-                        controller.verifyOtp(pin.toString());
+                      onCompleted: (pin) async {
+                        final success = await context
+                            .read<VerifyOtpProvider>()
+                            .verifyOtp(pin);
+
+                        if (success) {
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.login);
+                        }
                       },
                     ),
 
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
                     Text(
                       "Didn't receive a code?",
                       style: TextStyle(
                         color: AppColor.subHeading,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                    Obx(()=>Text(
-                      'Resend in 00:${controller.resendOtpTimer.value.toString()}',
+                    /// ⏳ Timer
+                    Text(
+                      'Resend in 00:${provider.resendOtpTimer}',
                       style: TextStyle(
                         color: AppColor.subHeading,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
                       ),
-                    ),),
-                    SizedBox(height: 10,),
-                    InkWell(
-                      onTap: (){
-                        controller.validForResendCode.value?controller.resendOtp():null;
-                      },
-                      child: Obx(()=>Text(
-                        'Resend Code',
-                        style: TextStyle(
-                          color: controller.validForResendCode.value?AppColor.blue:AppColor.subHeading,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                      )),
                     ),
 
+                    const SizedBox(height: 10),
 
+                    /// 🔁 Resend
+                    InkWell(
+                      onTap: provider.validForResendCode
+                          ? () => context.read<VerifyOtpProvider>().resendOtp()
+                          : null,
+                      child: Text(
+                        'Resend Code',
+                        style: TextStyle(
+                          color: provider.validForResendCode
+                              ? AppColor.blue
+                              : AppColor.subHeading,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

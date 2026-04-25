@@ -1,18 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
 import 'package:CampusX/core/constant/app_color.dart';
 
-import '../controller/admin_dashboard_screen_controller.dart';
+import '../provider/admin_dashboard_provider.dart';
 
-class AdminDashboardScreen extends StatelessWidget {
-  AdminDashboardScreen({super.key});
+class AdminDashboardScreen extends StatefulWidget {
+  const AdminDashboardScreen({super.key});
 
-  final AdminDashboardScreenController controller = Get.put(
-    AdminDashboardScreenController(),
-  );
+  @override
+  State<AdminDashboardScreen> createState() =>
+      _AdminDashboardScreenState();
+}
+
+class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<AdminDashboardProvider>(
+        context,
+        listen: false,
+      ).loadDashboard();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<AdminDashboardProvider>(context);
+
+    if (controller.isLoading) {
+      return Scaffold(
+        backgroundColor: AppColor.background,
+        body: Center(
+          child: CircularProgressIndicator(color: AppColor.blue),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppBar(
@@ -28,687 +54,282 @@ class AdminDashboardScreen extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(
-                    Icons.notifications_none_outlined,
-                    color: AppColor.subHeading,
-                  ),
+                  icon: Icon(Icons.notifications_none_outlined,
+                      color: AppColor.subHeading),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(
-                    Icons.contact_support_outlined,
-                    color: AppColor.subHeading,
-                  ),
+                  icon: Icon(Icons.contact_support_outlined,
+                      color: AppColor.subHeading),
                 ),
               ],
             ),
           ],
         ),
       ),
+
       body: SafeArea(
-        child: Obx((){
-          if(controller.isLoading.value==true){
-            return Center(child: CircularProgressIndicator(color: AppColor.blue,));
-          }
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Campus Overview',
-                    style: TextStyle(
-                      color: AppColor.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Campus Overview',
+                  style: TextStyle(
+                    color: AppColor.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
-                  SizedBox(height: 3),
-                  Obx(()=>Text(
-                    'Welcome back, ${controller.userName.value}. Here is what happening today.',
-                    style: TextStyle(
-                      color: AppColor.subHeading,
-                      fontWeight: FontWeight.w300,
-                      fontSize: 12,
+                ),
+
+                const SizedBox(height: 3),
+
+                Text(
+                  'Welcome back, ${controller.userName}. Here is what happening today.',
+                  style: TextStyle(
+                    color: AppColor.subHeading,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                /// CARDS ROW 1
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildCard(
+                        title: 'Total Students',
+                        value: controller.totalStudents,
+                        icon: Icons.people_alt_outlined,
+                        iconColor: AppColor.blue,
+                        bgColor: AppColor.lightBlue,
+                      ),
                     ),
-                  ),),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: _buildCard(
+                        title: 'Total Teachers',
+                        value: controller.totalTeachers,
+                        icon: Icons.person_outline,
+                        iconColor: AppColor.purple,
+                        bgColor: AppColor.lightPurple,
+                      ),
+                    ),
+                  ],
+                ),
 
-                  SizedBox(height: 20),
+                const SizedBox(height: 10),
 
-                  Row(
+                /// CARDS ROW 2
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildCard(
+                        title: 'Active Courses',
+                        value: controller.activeCourses,
+                        icon: Icons.book_outlined,
+                        iconColor: AppColor.orange,
+                        bgColor: AppColor.lightOrange,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: _buildCard(
+                        title: 'Pending Complaints',
+                        value: controller.pendingComplaints,
+                        icon: Icons.warning_amber_outlined,
+                        iconColor: AppColor.red,
+                        bgColor: AppColor.lightRed,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                /// RECENT USERS
+                Card(
+                  color: AppColor.white,
+                  child: Column(
                     children: [
-                      ///Total Students
-                      Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          elevation: 2,
-                          color: AppColor.white,
-                          clipBehavior: Clip.antiAlias,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(14),
-                                            color: AppColor.lightBlue
-                                        ),
-                                        width: 40,
-                                        height: 40,
-                                        child: Icon(Icons.people_alt_outlined,color: AppColor.blue,)
-                                    ),
-
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: AppColor.lightGreen,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.show_chart,color: AppColor.green,),
-                                            Text(
-                                              '10%',
-                                              style: TextStyle(
-                                                color: AppColor.green,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-
-                                Text(
-                                  'Total Students',
-                                  style: TextStyle(
-                                    color: AppColor.subHeading,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-
-                                Obx(()=>Text(
-                                  controller.totalTeachers.value,
-                                  style: TextStyle(
-                                    color: AppColor.black,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )),
-                              ],
-                            ),
-                          ),
-                        ),
+                      _header('Recent User Activity'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: _tableHeader(['User', 'Role', 'Status']),
                       ),
 
-                      SizedBox(width: 20,),
-                      ///Total Teacher
-                      Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          elevation: 2,
-                          color: AppColor.white,
-                          clipBehavior: Clip.antiAlias,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(14),
-                                            color: AppColor.lightPurple
-                                        ),
-                                        width: 40,
-                                        height: 40,
-                                        child: Icon(Icons.person_outline,color: AppColor.purple,)
-                                    ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.recentUsers.length,
+                        itemBuilder: (context, index) {
+                          final user = controller.recentUsers[index];
 
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: AppColor.lightGreen,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.show_chart,color: AppColor.green,),
-                                            Text(
-                                              '10%',
-                                              style: TextStyle(
-                                                color: AppColor.green,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-
-                                Text(
-                                  'Total Teachers',
-                                  style: TextStyle(
-                                    color: AppColor.subHeading,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-
-                                Obx(()=>Text(
-                                  controller.totalStudents.value,
-                                  style: TextStyle(
-                                    color: AppColor.black,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )),
-                              ],
-                            ),
-                          ),
-                        ),
+                          return _row(
+                            left: user.name,
+                            middle: user.role,
+                            right: user.isAuthenticated
+                                ? 'Active'
+                                : 'Inactive',
+                            isActive: user.isAuthenticated,
+                          );
+                        },
                       ),
                     ],
                   ),
-                  SizedBox(height: 10,),
-                  Row(
+                ),
+
+                const SizedBox(height: 20),
+
+                /// RECENT COMPLAINTS
+                Card(
+                  color: AppColor.white,
+                  child: Column(
                     children: [
-                      ///Active Courses
-                      Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          elevation: 2,
-                          color: AppColor.white,
-                          clipBehavior: Clip.antiAlias,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(14),
-                                            color: AppColor.lightOrange
-                                        ),
-                                        width: 40,
-                                        height: 40,
-                                        child: Icon(Icons.book_outlined,color: AppColor.orange,)
-                                    ),
-
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: AppColor.lightGreen,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.show_chart,color: AppColor.green,),
-                                            Text(
-                                              '10%',
-                                              style: TextStyle(
-                                                color: AppColor.green,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-
-                                Text(
-                                  'Active Courses',
-                                  style: TextStyle(
-                                    color: AppColor.subHeading,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-
-                                Obx(()=>Text(
-                                  controller.activeCourses.value,
-                                  style: TextStyle(
-                                    color: AppColor.black,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )),
-                              ],
-                            ),
-                          ),
-                        ),
+                      _header('Recent Complaints'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: _tableHeader(['ID', 'Subject', 'Status']),
                       ),
 
-                      SizedBox(width: 20,),
-                      ///Pending Complaints
-                      Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          elevation: 2,
-                          color: AppColor.white,
-                          clipBehavior: Clip.antiAlias,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(14),
-                                            color: AppColor.lightRed
-                                        ),
-                                        width: 40,
-                                        height: 40,
-                                        child: Icon(Icons.warning_amber_outlined,color: AppColor.red,)
-                                    ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.recentComplaints.length,
+                        itemBuilder: (context, index) {
+                          final c = controller.recentComplaints[index];
 
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: AppColor.lightGreen,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.show_chart,color: AppColor.green,),
-                                            Text(
-                                              '10%',
-                                              style: TextStyle(
-                                                color: AppColor.green,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-
-                                Text(
-                                  'Pending Complaints',
-                                  style: TextStyle(
-                                    color: AppColor.subHeading,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-
-                                Obx(()=>Text(
-                                  controller.pendingComplaints.value,
-                                  style: TextStyle(
-                                    color: AppColor.black,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )),
-                              ],
-                            ),
-                          ),
-                        ),
+                          return _row(
+                            left: c.id.toString(),
+                            middle: c.title,
+                            right: c.status,
+                            isActive: true,
+                          );
+                        },
                       ),
-
                     ],
                   ),
-                  SizedBox(height: 20),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-                  ///Recent User
-                  Card(
-                    color: AppColor.white,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 20,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Recent User Activity',
-                                style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
-
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  'View all',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          color: AppColor.footer,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 5,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'User',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Role',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Status',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Obx(()=>ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final user = controller.recentUsers[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 12,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          user.name,
-                                          style: TextStyle(
-                                            color: AppColor.black,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(user.role),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: user.isAuthenticated
-                                                  ? AppColor.lightGreen
-                                                  : AppColor.outline,
-                                              borderRadius: BorderRadius.circular(
-                                                12,
-                                              ),
-                                            ),
-
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: 5,
-                                                vertical: 2,
-                                              ),
-                                              child: Text(
-                                                user.isAuthenticated?'Active':'Inactive',
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  color:
-                                                  user.isAuthenticated
-                                                      ? AppColor.green
-                                                      : AppColor.subHeading,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(),
-                                ],
-                              ),
-                            );
-                          },
-                          itemCount: controller.recentUsers.length,
-                        ),)
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  ///Recent complaints
-                  Card(
-                    color: AppColor.white,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 20,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Recent Complaints',
-                                style: TextStyle(
-                                  color: AppColor.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
-
-                              InkWell(
-                                onTap: () {},
-                                child: Text(
-                                  'View all',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          color: AppColor.footer,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 5,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'ID',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Subject',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Priority',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Obx(()=>ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final complaints = controller.recentComplaints[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 12,
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          complaints.id.toString(),
-                                          style: TextStyle(
-                                            color: AppColor.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          complaints.title,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColor.lightBlue,
-                                              borderRadius: BorderRadius.circular(
-                                                12,
-                                              ),
-                                            ),
-
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: 5,
-                                                vertical: 2,
-                                              ),
-                                              child: Text(
-                                                complaints.status,
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                  color: AppColor.blue,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(),
-                                ],
-                              ),
-                            );
-                          },
-                          itemCount: controller.recentComplaints.length,
-                        )),
-                      ],
-                    ),
-                  ),
-                ],
+  Widget _buildCard({
+    required String title,
+    required String value,
+    required IconData icon,
+    required Color iconColor,
+    required Color bgColor,
+  }) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+      elevation: 2,
+      color: AppColor.white,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: bgColor,
+              ),
+              child: Icon(icon, color: iconColor),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              title,
+              style: TextStyle(
+                color: AppColor.subHeading,
+                fontSize: 12,
               ),
             ),
-          );
-        }),
+            const SizedBox(height: 5),
+            Text(
+              value,
+              style: TextStyle(
+                color: AppColor.black,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _header(String title) {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title,
+          style: TextStyle(
+            color: AppColor.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tableHeader(List<String> items) {
+    return Container(
+      height: 30,
+      color: AppColor.footer,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: items
+            .map(
+              (e) => Text(
+            e,
+            style: TextStyle(
+              color: AppColor.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _row({
+    required String left,
+    required String middle,
+    required String right,
+    required bool isActive,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          Expanded(child: Text(left)),
+          Expanded(child: Text(middle)),
+          Expanded(
+            child: Text(
+              right,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                color: isActive ? Colors.green : Colors.grey,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

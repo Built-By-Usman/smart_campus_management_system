@@ -1,18 +1,17 @@
+import 'package:CampusX/authentication/provider/login_provider.dart';
+import 'package:CampusX/core/constant/app_routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:CampusX/core/constant/app_color.dart';
-
-import '../controller/login_screen_controller.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  final LoginScreenController controller = Get.put(LoginScreenController());
-
   @override
   Widget build(BuildContext context) {
+    final loginProvider = Provider.of<LoginProvider>(context);
     return Scaffold(
       backgroundColor: AppColor.background,
       body: SafeArea(
@@ -49,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                                   SvgPicture.asset('assets/icons/logo.svg'),
                                   SizedBox(height: 10),
                                   Text(
-                                    'smartt Campus',
+                                    'Smart Campus',
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: AppColor.white,
@@ -87,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 5),
                               Text(
-                                'Sign in to access your student dashboard',
+                                'Sign in to access your dashboard',
                                 style: TextStyle(
                                   color: AppColor.subHeading,
                                   fontWeight: FontWeight.w300,
@@ -110,38 +109,40 @@ class LoginScreen extends StatelessWidget {
                               ),
 
                               SizedBox(height: 5),
-                              Obx(()=>TextField(
-                                controller: controller.emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                cursorColor: AppColor.black,
-                                decoration: InputDecoration(
-                                  errorText: controller.emailError.value.isNotEmpty?controller.emailError.value:null,
-                                  hintText: 'builtbyusman@gmail.com',
-                                  prefixIcon: Icon(
-                                    Icons.email,
-                                    color: AppColor.subHeading,
-                                  ),
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
+                              Consumer<LoginProvider>(builder: (context,value,child){
+                                return TextField(
+                                  controller: loginProvider.emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  cursorColor: AppColor.black,
+                                  decoration: InputDecoration(
+                                    errorText: value.emailError.isNotEmpty?value.emailError:null,
+                                    hintText: 'johndoe@example.com',
+                                    prefixIcon: Icon(
+                                      Icons.email,
                                       color: AppColor.subHeading,
                                     ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: AppColor.outline,
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: AppColor.subHeading,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: AppColor.outline,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: AppColor.outline,
+                                      ),
                                     ),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: AppColor.outline,
-                                    ),
-                                  ),
-                                ),
-                              ),),
+                                );
+                              }),
 
                               SizedBox(height: 20),
 
@@ -158,56 +159,58 @@ class LoginScreen extends StatelessWidget {
                               ),
 
                               SizedBox(height: 5),
-                              Obx(()=>TextField(
-                                controller: controller.passwordController,
-                                keyboardType: TextInputType.visiblePassword,
-                                obscureText: !controller.showPassword.value,
-                                cursorColor: AppColor.black,
-                                decoration: InputDecoration(
-                                  errorText: controller.passwordError.value.isNotEmpty?controller.passwordError.value:null,
-                                  hintText: '*******',
-                                  suffixIcon: IconButton(onPressed: (){
-                                    controller.showPassword.value = !controller.showPassword.value;
-                                  }, icon: controller.showPassword.value?Icon(Icons.visibility_off_outlined):Icon(Icons.remove_red_eye_outlined)),
-                                  prefixIcon: Icon(
-                                    Icons.lock,
-                                    color: AppColor.subHeading,
-                                  ),
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: AppColor.outline,
+                              Consumer<LoginProvider>(builder: (context,value,child){
+                                return TextField(
+                                  controller: value.passwordController,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  obscureText: !value.showPassword,
+                                  cursorColor: AppColor.black,
+                                  decoration: InputDecoration(
+                                    errorText: value.passwordError.isNotEmpty?value.passwordError:null,
+                                    hintText: '*******',
+                                    suffixIcon: IconButton(onPressed: (){
+                                      value.togglePassword(!value.showPassword);
+                                    }, icon: value.showPassword?Icon(Icons.visibility_off_outlined):Icon(Icons.remove_red_eye_outlined)),
+                                    prefixIcon: Icon(
+                                      Icons.lock,
+                                      color: AppColor.subHeading,
+                                    ),
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: AppColor.outline,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: AppColor.outline,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: BorderSide(
+                                        color: AppColor.outline,
+                                      ),
                                     ),
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: AppColor.outline,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: AppColor.outline,
-                                    ),
-                                  ),
-                                ),
-                              ),),
+                                );
+                              }),
 
                               SizedBox(height: 10),
                               Row(
                                 children: [
-                                  Obx(
-                                    () => Checkbox(
-                                      value: controller.rememberMe.value,
-                                      onChanged: (bool? value) {
-                                        controller.rememberMe.value = value!;
+                                  Consumer<LoginProvider>(builder: (context,value,child){
+                                    return Checkbox(
+                                      value: value.rememberMe,
+                                      onChanged: (bool? newValue) {
+                                        value.toggleRemember(newValue!);
                                       },
                                       activeColor: AppColor.blue,
                                       checkColor: AppColor.white,
-                                    ),
-                                  ),
+                                    );
+                                  }),
                                   Text(
                                     'Remember device',
                                     style: TextStyle(
@@ -219,208 +222,10 @@ class LoginScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 8),
 
-                              // InkWell(
-                              //   onTap: () {
-                              //     controller.changeRole('Admin');
-                              //   },
-                              //   child: SizedBox(
-                              //     width: double.infinity,
-                              //     child: Obx(
-                              //       () => Card(
-                              //         shape: RoundedRectangleBorder(
-                              //           borderRadius:
-                              //               BorderRadiusGeometry.circular(15),
-                              //           side: BorderSide(
-                              //             color:
-                              //                 controller.selectedRole.value ==
-                              //                     'Admin'
-                              //                 ? AppColor.blue
-                              //                 : Colors.transparent,
-                              //             width: 2,
-                              //           ),
-                              //         ),
-                              //         elevation: 2,
-                              //         shadowColor:
-                              //             controller.selectedRole.value ==
-                              //                 'Admin'
-                              //             ? AppColor.blue
-                              //             : AppColor.subHeading,
-                              //         color: AppColor.white,
-                              //         child: Padding(
-                              //           padding: const EdgeInsets.symmetric(
-                              //             vertical: 16,
-                              //           ),
-                              //           child: Center(
-                              //             child: Text(
-                              //               'Admin',
-                              //               style: TextStyle(
-                              //                 color:
-                              //                     controller
-                              //                             .selectedRole
-                              //                             .value ==
-                              //                         "Admin"
-                              //                     ? AppColor.blue
-                              //                     : AppColor.subHeading,
-                              //                 fontWeight:
-                              //                     controller
-                              //                             .selectedRole
-                              //                             .value ==
-                              //                         "Admin"
-                              //                     ? FontWeight.bold
-                              //                     : FontWeight.w500,
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                              //
-                              // SizedBox(height: 5),
-                              //
-                              // Row(
-                              //   children: [
-                              //     Expanded(
-                              //       child: InkWell(
-                              //         onTap: () {
-                              //           controller.changeRole('Teacher');
-                              //         },
-                              //         child: SizedBox(
-                              //           width: double.infinity,
-                              //           child: Obx(
-                              //             () => Card(
-                              //               shape: RoundedRectangleBorder(
-                              //                 borderRadius:
-                              //                     BorderRadiusGeometry.circular(
-                              //                       15,
-                              //                     ),
-                              //                 side: BorderSide(
-                              //                   color:
-                              //                       controller
-                              //                               .selectedRole
-                              //                               .value ==
-                              //                           'Teacher'
-                              //                       ? AppColor.blue
-                              //                       : Colors.transparent,
-                              //                   width: 2,
-                              //                 ),
-                              //               ),
-                              //               elevation: 2,
-                              //               shadowColor:
-                              //                   controller.selectedRole.value ==
-                              //                       'Teacher'
-                              //                   ? AppColor.blue
-                              //                   : AppColor.subHeading,
-                              //               color: AppColor.white,
-                              //               child: Padding(
-                              //                 padding:
-                              //                     const EdgeInsets.symmetric(
-                              //                       vertical: 16,
-                              //                     ),
-                              //                 child: Center(
-                              //                   child: Text(
-                              //                     'Teacher',
-                              //                     style: TextStyle(
-                              //                       color:
-                              //                           controller
-                              //                                   .selectedRole
-                              //                                   .value ==
-                              //                               "Teacher"
-                              //                           ? AppColor.blue
-                              //                           : AppColor.subHeading,
-                              //                       fontWeight:
-                              //                           controller
-                              //                                   .selectedRole
-                              //                                   .value ==
-                              //                               "Teacher"
-                              //                           ? FontWeight.bold
-                              //                           : FontWeight.w500,
-                              //                     ),
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //
-                              //     SizedBox(width: 10),
-                              //
-                              //     Expanded(
-                              //       child: InkWell(
-                              //         onTap: () {
-                              //           controller.changeRole('Student');
-                              //         },
-                              //         child: SizedBox(
-                              //           width: double.infinity,
-                              //           child: Obx(
-                              //             () => Card(
-                              //               shape: RoundedRectangleBorder(
-                              //                 borderRadius:
-                              //                     BorderRadiusGeometry.circular(
-                              //                       15,
-                              //                     ),
-                              //                 side: BorderSide(
-                              //                   color:
-                              //                       controller
-                              //                               .selectedRole
-                              //                               .value ==
-                              //                           'Student'
-                              //                       ? AppColor.blue
-                              //                       : Colors.transparent,
-                              //                   width: 2,
-                              //                 ),
-                              //               ),
-                              //               elevation: 2,
-                              //               shadowColor:
-                              //                   controller.selectedRole.value ==
-                              //                       'Student'
-                              //                   ? AppColor.blue
-                              //                   : AppColor.subHeading,
-                              //               color: AppColor.white,
-                              //               child: Padding(
-                              //                 padding:
-                              //                     const EdgeInsets.symmetric(
-                              //                       vertical: 16,
-                              //                     ),
-                              //                 child: Center(
-                              //                   child: Text(
-                              //                     'Student',
-                              //                     style: TextStyle(
-                              //                       color:
-                              //                           controller
-                              //                                   .selectedRole
-                              //                                   .value ==
-                              //                               "Student"
-                              //                           ? AppColor.blue
-                              //                           : AppColor.subHeading,
-                              //                       fontWeight:
-                              //                           controller
-                              //                                   .selectedRole
-                              //                                   .value ==
-                              //                               "Student"
-                              //                           ? FontWeight.bold
-                              //                           : FontWeight.w500,
-                              //                     ),
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-
-                              SizedBox(height: 20),
-
                               SizedBox(
                                 width: double.infinity,
-                                child: Obx(
-                                  () => ElevatedButton(
+                                child: Consumer<LoginProvider>(builder: (context,value,child){
+                                  return ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColor.blue,
                                       padding: EdgeInsets.all(15),
@@ -431,22 +236,22 @@ class LoginScreen extends StatelessWidget {
                                     ),
 
                                     onPressed: () {
-                                      controller.isLoading.value?null:controller.validateInput();
+                                      value.isLoading?null:value.validateInput(context);
                                     },
-                                    child: controller.isLoading.value
+                                    child: value.isLoading
                                         ? CircularProgressIndicator(
-                                            color: AppColor.white,
-                                          )
+                                      color: AppColor.white,
+                                    )
                                         : Text(
-                                            'Sign In',
-                                            style: TextStyle(
-                                              color: AppColor.white,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                  ),
-                                ),
+                                      'Sign In',
+                                      style: TextStyle(
+                                        color: AppColor.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  );
+                                })
                               ),
                               SizedBox(height: 20),
 
@@ -469,7 +274,7 @@ class LoginScreen extends StatelessWidget {
                                       ),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          controller.goToSignUpScreen();
+                                          Navigator.pushNamed(context,AppRoutes.signUp);
                                         },
                                     ),
                                   ],

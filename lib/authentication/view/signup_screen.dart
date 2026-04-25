@@ -1,17 +1,17 @@
+import 'package:CampusX/authentication/provider/signup_provider.dart';
+import 'package:CampusX/core/constant/app_routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:CampusX/core/constant/app_color.dart';
-
-import '../controller/signup_screen_controller.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
 
-  final SignupScreenController controller = Get.put(SignupScreenController());
-
   @override
   Widget build(BuildContext context) {
+    final signupProvider = Provider.of<SignUpProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppBar(
@@ -20,7 +20,6 @@ class SignupScreen extends StatelessWidget {
           style: TextStyle(color: AppColor.black, fontWeight: FontWeight.w500),
         ),
       ),
-
       body: SafeArea(
         child: Column(
           children: [
@@ -30,7 +29,9 @@ class SignupScreen extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.14,
               fit: BoxFit.cover,
             ),
+
             SizedBox(height: 20),
+
             Text(
               'Create Student Account',
               style: TextStyle(
@@ -41,8 +42,9 @@ class SignupScreen extends StatelessWidget {
             ),
 
             SizedBox(height: 7),
+
             Text(
-              'Enter your details to access the smartt campus services',
+              'Enter your details to access the smart333 campus services',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColor.black,
@@ -61,7 +63,6 @@ class SignupScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Full Name',
-                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.black,
                             fontSize: 13,
@@ -71,39 +72,35 @@ class SignupScreen extends StatelessWidget {
                       ),
 
                       SizedBox(height: 5),
-                      Obx(
-                        () => TextField(
-                          controller: controller.nameController,
-                          cursorColor: AppColor.black,
-                          keyboardType: TextInputType.name,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              'John Doe',
-                              style: TextStyle(color: AppColor.subHeading),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.person_outline,
-                              color: AppColor.subHeading,
-                            ),
-                            fillColor: AppColor.white,
-                            filled: true,
-                            isDense: true,
-                            errorText: controller.nameError.value.isEmpty
-                                ? null
-                                : controller.nameError.value,
 
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
+                      TextField(
+                        controller: signupProvider.nameController,
+                        cursorColor: AppColor.black,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          hintText: 'John Doe',
+                          hintStyle: TextStyle(color: AppColor.subHeading),
+                          prefixIcon: Icon(
+                            Icons.person_outline,
+                            color: AppColor.subHeading,
+                          ),
+                          fillColor: AppColor.white,
+                          filled: true,
+                          isDense: true,
+                          errorText: signupProvider.nameError.isEmpty
+                              ? null
+                              : signupProvider.nameError,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
                           ),
                         ),
                       ),
@@ -114,7 +111,6 @@ class SignupScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Email',
-                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.black,
                             fontSize: 13,
@@ -122,42 +118,37 @@ class SignupScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       SizedBox(height: 5),
 
-                      Obx(
-                        () => TextField(
-                          controller: controller.emailController,
-                          cursorColor: AppColor.black,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              'example@uos.edu.pk',
-                              style: TextStyle(color: AppColor.subHeading),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.email_outlined,
-                              color: AppColor.subHeading,
-                            ),
-                            fillColor: AppColor.white,
-                            filled: true,
-                            isDense: true,
-
-                            errorText: controller.emailError.value.isEmpty
-                                ? null
-                                : controller.emailError.value,
-
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
+                      TextField(
+                        controller: signupProvider.emailController,
+                        cursorColor: AppColor.black,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: 'example@uos.edu.pk',
+                          hintStyle: TextStyle(color: AppColor.subHeading),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: AppColor.subHeading,
+                          ),
+                          fillColor: AppColor.white,
+                          filled: true,
+                          isDense: true,
+                          errorText: signupProvider.emailError.isEmpty
+                              ? null
+                              : signupProvider.emailError,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
                           ),
                         ),
                       ),
@@ -168,7 +159,6 @@ class SignupScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Password',
-                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.black,
                             fontSize: 13,
@@ -176,56 +166,53 @@ class SignupScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Obx(
-                        () => TextField(
-                          controller: controller.passwordController,
-                          cursorColor: AppColor.black,
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: !controller.showPassword.value,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              '******',
-                              style: TextStyle(color: AppColor.subHeading),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.lock_outline,
-                              color: AppColor.subHeading,
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                controller.showPassword.value =
-                                    !controller.showPassword.value;
-                              },
-                              icon: controller.showPassword.value
-                                  ? Icon(
-                                      Icons.visibility_off_outlined,
-                                      color: AppColor.subHeading,
-                                    )
-                                  : Icon(
-                                      Icons.remove_red_eye_outlined,
-                                      color: AppColor.subHeading,
-                                    ),
-                            ),
-                            fillColor: AppColor.white,
-                            filled: true,
-                            isDense: true,
-                            errorText: controller.passwordError.value.isEmpty
-                                ? null
-                                : controller.passwordError.value,
 
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
+                      SizedBox(height: 5),
+
+                      TextField(
+                        controller: signupProvider.passwordController,
+                        obscureText: !signupProvider.showPassword,
+                        cursorColor: AppColor.black,
+                        decoration: InputDecoration(
+                          hintText: '******',
+                          hintStyle: TextStyle(color: AppColor.subHeading),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: AppColor.subHeading,
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              signupProvider.togglePassword(
+                                !signupProvider.showPassword,
+                              );
+                            },
+                            icon: signupProvider.showPassword
+                                ? Icon(
+                                    Icons.visibility_off_outlined,
+                                    color: AppColor.subHeading,
+                                  )
+                                : Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    color: AppColor.subHeading,
+                                  ),
+                          ),
+                          fillColor: AppColor.white,
+                          filled: true,
+                          isDense: true,
+                          errorText: signupProvider.passwordError.isEmpty
+                              ? null
+                              : signupProvider.passwordError,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
                           ),
                         ),
                       ),
@@ -236,7 +223,6 @@ class SignupScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Confirm Password',
-                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.black,
                             fontSize: 13,
@@ -244,58 +230,53 @@ class SignupScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       SizedBox(height: 5),
-                      Obx(
-                        () => TextField(
-                          controller: controller.confirmPasswordController,
-                          cursorColor: AppColor.black,
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: !controller.showConfirmPassword.value,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              '******',
-                              style: TextStyle(color: AppColor.subHeading),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.lock_reset_outlined,
-                              color: AppColor.subHeading,
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                controller.showConfirmPassword.value =
-                                    !controller.showConfirmPassword.value;
-                              },
-                              icon: controller.showConfirmPassword.value
-                                  ? Icon(
-                                      Icons.visibility_off_outlined,
-                                      color: AppColor.subHeading,
-                                    )
-                                  : Icon(
-                                      Icons.remove_red_eye_outlined,
-                                      color: AppColor.subHeading,
-                                    ),
-                            ),
-                            fillColor: AppColor.white,
-                            filled: true,
-                            isDense: true,
 
-                            errorText:
-                                controller.confirmPasswordError.value.isEmpty
-                                ? null
-                                : controller.confirmPasswordError.value,
-
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: AppColor.outline),
-                            ),
+                      TextField(
+                        controller: signupProvider.confirmPasswordController,
+                        obscureText: !signupProvider.showConfirmPassword,
+                        cursorColor: AppColor.black,
+                        decoration: InputDecoration(
+                          hintText: '******',
+                          hintStyle: TextStyle(color: AppColor.subHeading),
+                          prefixIcon: Icon(
+                            Icons.lock_reset_outlined,
+                            color: AppColor.subHeading,
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              signupProvider.toggleConfirmPassword(
+                                !signupProvider.showConfirmPassword,
+                              );
+                            },
+                            icon: signupProvider.showConfirmPassword
+                                ? Icon(
+                                    Icons.visibility_off_outlined,
+                                    color: AppColor.subHeading,
+                                  )
+                                : Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    color: AppColor.subHeading,
+                                  ),
+                          ),
+                          fillColor: AppColor.white,
+                          filled: true,
+                          isDense: true,
+                          errorText: signupProvider.confirmPasswordError.isEmpty
+                              ? null
+                              : signupProvider.confirmPasswordError,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: AppColor.outline),
                           ),
                         ),
                       ),
@@ -304,155 +285,144 @@ class SignupScreen extends StatelessWidget {
 
                       SizedBox(
                         height: 60,
-                        child: Obx(
-                          () => Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    controller.selectedRole.value = "Teacher";
-                                  },
-                                  child: Card(
-                                    elevation: 2,
-                                    shadowColor:
-                                        controller.selectedRole.value ==
-                                            "Teacher"
-                                        ? AppColor.blue
-                                        : null,
-                                    color: AppColor.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(15),
-                                      side: BorderSide(
-                                        color:
-                                            controller.selectedRole.value ==
-                                                "Teacher"
-                                            ? AppColor.blue
-                                            : Colors.transparent,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Teacher',
-                                        style: TextStyle(
-                                          color:
-                                              controller.selectedRole.value ==
-                                                  "Teacher"
-                                              ? AppColor.blue
-                                              : null,
-                                          fontWeight:
-                                              controller.selectedRole.value ==
-                                                  "Teacher"
-                                              ? FontWeight.bold
-                                              : FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20),
-
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    controller.selectedRole.value = "Student";
-                                  },
-                                  child: Card(
-                                    elevation: 2,
-                                    shadowColor:
-                                        controller.selectedRole.value ==
-                                            "Student"
-                                        ? AppColor.blue
-                                        : null,
-                                    color: AppColor.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(15),
-                                      side: BorderSide(
-                                        color:
-                                            controller.selectedRole.value ==
-                                                "Student"
-                                            ? AppColor.blue
-                                            : Colors.transparent,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Student',
-                                        style: TextStyle(
-                                          color:
-                                              controller.selectedRole.value ==
-                                                  "Student"
-                                              ? AppColor.blue
-                                              : null,
-                                          fontWeight:
-                                              controller.selectedRole.value ==
-                                                  "Student"
-                                              ? FontWeight.bold
-                                              : FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Obx(
-                            () => Checkbox(
-                              value: controller.isConditionsChecked.value,
-                              onChanged: (bool? value) {
-                                controller.isConditionsChecked.value = value!;
-                              },
-                              activeColor: AppColor.blue,
-                              checkColor: AppColor.white,
-                            ),
-                          ),
-
-                          RichText(
-                            text: TextSpan(
-                              text: 'I agree to the ',
-                              style: TextStyle(
-                                color: AppColor.subHeading,
-                                fontSize: 13,
-                              ),
+                        child: Consumer<SignUpProvider>(
+                          builder: (context, value, child) {
+                            return Row(
                               children: [
-                                TextSpan(
-                                  text: 'Terms of Service ',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13,
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      value.changeRole("Teacher");
+                                    },
+                                    child: Card(
+                                      elevation: 2,
+                                      shadowColor:
+                                      value.selectedRole == "Teacher"
+                                          ? AppColor.blue
+                                          : null,
+                                      color: AppColor.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadiusGeometry.circular(15),
+                                        side: BorderSide(
+                                          color: value.selectedRole == "Teacher"
+                                              ? AppColor.blue
+                                              : Colors.transparent,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Teacher',
+                                          style: TextStyle(
+                                            color:
+                                            value.selectedRole == "Teacher"
+                                                ? AppColor.blue
+                                                : null,
+                                            fontWeight:
+                                            value.selectedRole == "Teacher"
+                                                ? FontWeight.bold
+                                                : FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                TextSpan(text: 'and '),
-                                TextSpan(
-                                  text: 'Privacy policy. ',
-                                  style: TextStyle(
-                                    color: AppColor.blue,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13,
+                                SizedBox(width: 20),
+
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      value.changeRole("Student");
+                                    },
+                                    child: Card(
+                                      elevation: 2,
+                                      shadowColor:
+                                      value.selectedRole == "Student"
+                                          ? AppColor.blue
+                                          : null,
+                                      color: AppColor.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadiusGeometry.circular(15),
+                                        side: BorderSide(
+                                          color: value.selectedRole == "Student"
+                                              ? AppColor.blue
+                                              : Colors.transparent,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Student',
+                                          style: TextStyle(
+                                            color:
+                                            value.selectedRole == "Student"
+                                                ? AppColor.blue
+                                                : null,
+                                            fontWeight:
+                                            value.selectedRole == "Student"
+                                                ? FontWeight.bold
+                                                : FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
+                            );
+                          },
+                        ),
+                      ),
+
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: signupProvider.isConditionChecked,
+                            checkColor: AppColor.white,
+                            activeColor: AppColor.blue,
+                            onChanged: (v) {
+                              signupProvider.toggleConditionsCheck(v!);
+                            },
+                          ),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'I agree to the ',
+                                style: TextStyle(
+                                  color: AppColor.subHeading,
+                                  fontSize: 13,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'Terms of Service ',
+                                    style: TextStyle(
+                                      color: AppColor.blue,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  TextSpan(text: 'and '),
+                                  TextSpan(
+                                    text: 'Privacy policy. ',
+                                    style: TextStyle(
+                                      color: AppColor.blue,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
 
                       SizedBox(height: 10),
+
                       SizedBox(
                         width: double.infinity,
-                        child: Obx(()=>ElevatedButton(
+                        child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.all(15),
                             backgroundColor: AppColor.blue,
@@ -461,21 +431,22 @@ class SignupScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(23),
                             ),
                           ),
-                          onPressed: () {
-                            controller.isLoading.value?null:controller.validateInput();
-                          },
-
-                          child: controller.isLoading.value
-                              ? CircularProgressIndicator(color: AppColor.white)
+                          onPressed: signupProvider.isLoading
+                              ? null
+                              : (){
+                            signupProvider.validateInput(context);
+                          } ,
+                          child: signupProvider.isLoading
+                              ? CircularProgressIndicator(color: AppColor.blue)
                               : Text(
-                            'Send Otp',
-                            style: TextStyle(
-                              color: AppColor.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )),
+                                  'Send Otp',
+                                  style: TextStyle(
+                                    color: AppColor.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
                       ),
 
                       SizedBox(height: 15),
@@ -492,12 +463,15 @@ class SignupScreen extends StatelessWidget {
                               text: 'Log in',
                               style: TextStyle(
                                 color: AppColor.blue,
-                                fontSize: 13,
                                 fontWeight: FontWeight.w700,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  controller.goToLoginScreen();
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    AppRoutes.login,
+                                    (route) => false,
+                                  );
                                 },
                             ),
                           ],

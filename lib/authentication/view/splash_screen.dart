@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:CampusX/core/constant/app_color.dart';
+import '../provider/splash_provider.dart';
 
-import '../controller/splash_screen_controller.dart';
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
-class SplashScreen extends StatelessWidget {
-  SplashScreen({super.key});
-  final SplashScreenController controller = Get.put(SplashScreenController());
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<SplashProvider>(
+        context,
+        listen: false,
+      ).checkLoginStatus(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +52,16 @@ class SplashScreen extends StatelessWidget {
                   child: SvgPicture.asset('assets/icons/logo_filled.svg'),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
-                'smart Campus',
+                'Smart Campus',
                 style: TextStyle(
                   color: AppColor.white,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10),
               Text(
                 'University Digital Gateway',
                 style: TextStyle(

@@ -1,13 +1,21 @@
 class AppRoutes {
   AppRoutes._();
-  static final String splash = '/';
-  static final String login = '/login';
-  static final String signUp = '/signup';
-  static final String verifyOtp = '/verifyOtp';
 
-  ///Admin Routes
-  static final String adminHome = '/adminHome';
-  static final String adminApproveUsers = '/adminApproveUsers';
+  static const String splash = '/';
+  static const String login = '/login';
+  static const String signUp = '/signup';
+  static const String verifyOtp = '/verifyOtp';
+
+  /// Admin Routes
+  static const String adminHome = '/adminHome';
+  static const String adminApproveUsers = '/adminApproveUsers';
 
 
+  ///Teacher Routes
+  static const String teacherHome = '/teacherHome';
+
+
+
+  ///StudentRoutes
+  static const String studentHome = '/studentHome';
 }

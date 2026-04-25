@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../view/admin_course_management_screen.dart';
 import '../view/admin_dashboard_screen.dart';
+import '../view/admin_setting_screen.dart';
 import '../view/admin_user_management_screen.dart';
 
-class AdminHomeScreenController extends GetxController{
+class AdminHomeProvider extends ChangeNotifier {
+  int _index = 0;
 
-  var index = 0.obs;
+  int get index => _index;
 
-
-  void changeIndex(int newIndex){
-    index.value = newIndex;
+  void changeIndex(int newIndex) {
+    _index = newIndex;
+    notifyListeners();
   }
 
   final List<Widget> screens = [
     AdminDashboardScreen(),
     AdminUserManagementScreen(),
     AdminCourseManagementScreen(),
-    Center(child: Text('Settings'),),
+    AdminSettingScreen(),
   ];
-
 }

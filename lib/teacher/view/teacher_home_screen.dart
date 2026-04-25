@@ -1,30 +1,27 @@
+import 'package:CampusX/core/constant/app_color.dart';
+import 'package:CampusX/teacher/provider/teacher_home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constant/app_color.dart';
-import '../provider/admin_home_provider.dart';
 
-class AdminHomeScreen extends StatelessWidget {
-  const AdminHomeScreen({super.key});
+class TeacherHomeScreen extends StatelessWidget {
+  const TeacherHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final adminHomeProvider = Provider.of<AdminHomeProvider>(context);
 
+    final teacherHomeProvider = Provider.of<TeacherHomeProvider>(context);
     return Scaffold(
       extendBody: true,
-
-      body: adminHomeProvider.screens[adminHomeProvider.index],
-
-      /// Modern Material 3 Navigation Bar
+      body: teacherHomeProvider.screens[teacherHomeProvider.index],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
+            boxShadow: [
+              BoxShadow(
+                  color: AppColor.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: Offset(0, -5)
+              )
+            ]
         ),
         child: NavigationBarTheme(
           data: NavigationBarThemeData(
@@ -50,8 +47,8 @@ class AdminHomeScreen extends StatelessWidget {
             height: 70,
             backgroundColor: Colors.white,
             elevation: 0,
-            selectedIndex: adminHomeProvider.index,
-            onDestinationSelected: (index) => adminHomeProvider.changeIndex(index),
+            selectedIndex: teacherHomeProvider.index,
+            onDestinationSelected: (index) => teacherHomeProvider.changeIndex(index),
             destinations: const [
               NavigationDestination(
                 selectedIcon: Icon(Icons.dashboard_rounded),
@@ -61,22 +58,24 @@ class AdminHomeScreen extends StatelessWidget {
               NavigationDestination(
                 selectedIcon: Icon(Icons.people_alt_rounded),
                 icon: Icon(Icons.person_outline),
-                label: 'Users',
+                label: 'My Courses',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.menu_book_rounded),
                 icon: Icon(Icons.menu_book_outlined),
-                label: 'Courses',
+                label: 'Assignments',
               ),
               NavigationDestination(
                 selectedIcon: Icon(Icons.settings_rounded),
                 icon: Icon(Icons.settings_outlined),
-                label: 'Settings',
+                label: 'Profile',
               ),
             ],
           ),
         ),
       ),
+
+
     );
   }
 }
